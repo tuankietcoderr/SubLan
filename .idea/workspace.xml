@@ -1,7 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="cca83582-2d3b-4807-a758-11372bfe00de" name="Changes" comment="" />
+    <list default="true" id="cca83582-2d3b-4807-a758-11372bfe00de" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/download/audio.flac" beforeDir="false" afterPath="$PROJECT_DIR$/app/download/audio.flac" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/download/audio.mp3" beforeDir="false" afterPath="$PROJECT_DIR$/app/download/audio.mp3" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/download/subtitles.srt" beforeDir="false" afterPath="$PROJECT_DIR$/app/download/subtitles.srt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/speech_processing/audio.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/speech_processing/audio.py" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -14,10 +22,14 @@
       </list>
     </option>
   </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
   </component>
   <component name="ProjectId" id="2OC3tLjLZI8texAh6DHhMaWx2Rz" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
@@ -26,10 +38,16 @@
   "keyToString": {
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "WebServerToolWindowFactoryState": "false",
     "last_opened_file_path": "O:/University/EnglishPractice/Backend/app/main.py"
   }
 }]]></component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="O:\University\EnglishPractice\Backend\app" />
+    </key>
+  </component>
   <component name="RunManager">
     <configuration name="FastAPI" type="Python.FastAPI">
       <option name="file" value="O:\University\EnglishPractice\Backend\app\main.py" />
@@ -56,15 +74,26 @@
       <updated>1681050949421</updated>
       <workItem from="1681050956206" duration="7379000" />
       <workItem from="1681059025472" duration="22616000" />
-      <workItem from="1681108989575" duration="2261000" />
+      <workItem from="1681108989575" duration="4089000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/Backend$FastAPI.coverage" NAME="FastAPI Coverage Results" MODIFIED="1681110815139" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
+    <SUITE FILE_PATH="coverage/Backend$FastAPI.coverage" NAME="FastAPI Coverage Results" MODIFIED="1681113040905" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
     <SUITE FILE_PATH="coverage/Backend$main.coverage" NAME="main Coverage Results" MODIFIED="1681078268197" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/Backend$app.coverage" NAME="app Coverage Results" MODIFIED="1681106617732" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>

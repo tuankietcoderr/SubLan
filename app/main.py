@@ -8,7 +8,6 @@ from speech_processing.audio import make_srt_subtitles
 from pathlib import Path
 from os.path import dirname, abspath, join as join_path, splitext
 import shutil
-from pydantic import BaseModel
 
 import time
 app = FastAPI()
@@ -28,7 +27,7 @@ app.add_middleware(
 DOWNLOAD_DIR = 'download'
 ABS_DIR = dirname(abspath(__file__))
 PROJECT_DIR_TO_DOWNLOAD_FILE = join_path(ABS_DIR, DOWNLOAD_DIR)
-
+print(PROJECT_DIR_TO_DOWNLOAD_FILE)
 ALLOWED_EXTENSIONS = {'mp3', 'flac', 'wav'}
 
 
