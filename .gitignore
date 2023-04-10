@@ -1,2 +1,3 @@
 .space
 venv
+app/download/**

@@ -1,9 +1,12 @@
+import json
 import os
 
 import uvicorn
 from fastapi import FastAPI, UploadFile, File, Request, Form
-from fastapi.responses import StreamingResponse
+from fastapi.responses import StreamingResponse, JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
 from typing import Optional
 import whisper
 from speech_processing.audio import make_srt_subtitles
@@ -15,8 +18,14 @@ import time
 
 load_dotenv()
 
-app = FastAPI()
+DOWNLOAD_DIR = 'download'
+ABS_DIR = dirname(abspath(__file__))
+PROJECT_DIR_TO_DOWNLOAD_FILE = join_path(ABS_DIR, DOWNLOAD_DIR)
+print(PROJECT_DIR_TO_DOWNLOAD_FILE)
+ALLOWED_EXTENSIONS = {'mp3', 'flac', 'wav'}
 
+app = FastAPI()
+app.mount("/files", StaticFiles(directory=PROJECT_DIR_TO_DOWNLOAD_FILE), name="files")
 origins = [
     "*",
 ]
@@ -29,12 +38,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-DOWNLOAD_DIR = 'download'
-ABS_DIR = dirname(abspath(__file__))
-PROJECT_DIR_TO_DOWNLOAD_FILE = join_path(ABS_DIR, DOWNLOAD_DIR)
-print(PROJECT_DIR_TO_DOWNLOAD_FILE)
-ALLOWED_EXTENSIONS = {'mp3', 'flac', 'wav'}
-
 
 def allowed_file(filename):
     return '.' in filename and \
@@ -44,6 +47,12 @@ def allowed_file(filename):
 @app.get("/")
 async def root():
     return {"message": "SubLan API"}
+
+
+@app.get('/get-subtitles-file')
+async def get_file():
+    file_path = f'{PROJECT_DIR_TO_DOWNLOAD_FILE}/subtitles.srt'
+    return FileResponse(file_path)
 
 
 @app.post('/download-subtitle')
@@ -69,33 +78,37 @@ async def download_subtitle(request: Request, file: UploadFile = File(), model_t
 
     # Load the model and transcribe the audio
     audio_file = whisper.load_audio(join_path(PROJECT_DIR_TO_DOWNLOAD_FILE, audio_file_url))
-    model = whisper.load_model(model_type)
+    model = whisper.load_model(model_type.lower())
     result = model.transcribe(audio=audio_file, fp16=False)
     ##
 
     # Create the subtitle file
-    subtitle_file = join_path(PROJECT_DIR_TO_DOWNLOAD_FILE,f"{file_name}.{file_type}")
+    subtitle_file = join_path(PROJECT_DIR_TO_DOWNLOAD_FILE, f"{file_name}.{file_type}")
+    transcribe = ""
     if file_type == "srt":
         with open(subtitle_file, "w", encoding='utf-8') as f:
             if timestamps:
-                f.write(make_srt_subtitles(result["segments"]))
+                tmp = make_srt_subtitles(result["segments"])
+                transcribe = tmp
+                f.write(tmp)
             else:
+                transcribe = result["text"]
                 f.write(result["text"])
     elif file_type == "txt":
         with open(subtitle_file, "w", encoding='utf-8') as f:
-                f.write(result["text"])
+            transcribe = result["text"]
+            f.write(result["text"])
+
     else:
         raise TypeError("Invalid file type")
-
-    # Create a streaming response with the file
-    path = Path(subtitle_file)
-    media_type = "application/octet-stream"
-    response = StreamingResponse(path.open('rb'), media_type=media_type,
-                                 headers={'Content-Disposition': f'attachment;filename={file_name}.{file_type}'})
     print("It takes %s seconds" % (time.time() - start_time))
-    return response
+    return JSONResponse({
+        "text": result["text"],
+        "transcribe": transcribe
+    })
+
 
 if __name__ == "__main__":
     PORT = 3000 if not os.getenv("PORT") else int(os.getenv("PORT"))
     print(f"Server is running on port: {PORT}")
-    uvicorn.run(app, host="0.0.0.0", port=PORT)
+    uvicorn.run(app, host="localhost", port=PORT)
