@@ -1,0 +1,5 @@
+fastapi==0.95.0
+openai_whisper==20230314
+pydantic==1.10.7
+srt==3.5.3
+uvicorn==0.21.1
