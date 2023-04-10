@@ -1,7 +1,7 @@
 FROM python:3.9
+RUN apt-get update && apt-get install -y \
+ffmpeg
 WORKDIR /code
-RUN sudo apt update || true
-RUN sudo apt install ffmpeg || true
 COPY ./requirements.txt /code/requirements.txt
 RUN pip install --no-cache-dir --upgrade -r /code/requirements.txt
 COPY ./app /code/app
