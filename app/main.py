@@ -1,3 +1,5 @@
+import os
+
 import uvicorn
 from fastapi import FastAPI, UploadFile, File, Request, Form
 from fastapi.responses import StreamingResponse
@@ -8,8 +10,11 @@ from speech_processing.audio import make_srt_subtitles
 from pathlib import Path
 from os.path import dirname, abspath, join as join_path, splitext
 import shutil
-
+from dotenv import load_dotenv
 import time
+
+load_dotenv()
+
 app = FastAPI()
 
 origins = [
@@ -91,4 +96,6 @@ async def download_subtitle(request: Request, file: UploadFile = File(), model_t
     return response
 
 if __name__ == "__main__":
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    PORT = 3000 if not os.getenv("PORT") else int(os.getenv("PORT"))
+    print(f"Server is running on port: {PORT}")
+    uvicorn.run(app, host="0.0.0.0", port=PORT)
