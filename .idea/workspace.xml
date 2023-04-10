@@ -2,11 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="cca83582-2d3b-4807-a758-11372bfe00de" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/download/audio.flac" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/download/audio.mp3" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/download/subtitles.srt" beforeDir="false" afterPath="$PROJECT_DIR$/app/download/subtitles.srt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/main.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -76,6 +72,8 @@
       <workItem from="1681108989575" duration="13721000" />
       <workItem from="1681124992367" duration="1618000" />
       <workItem from="1681127868498" duration="12648000" />
+      <workItem from="1681158372055" duration="47000" />
+      <workItem from="1681159123499" duration="32000" />
     </task>
     <servers />
   </component>
