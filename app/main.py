@@ -4,9 +4,9 @@ from fastapi import FastAPI, UploadFile, File, Query
 from fastapi.responses import JSONResponse, FileResponse
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
-from speech_processing.audio import speech_processing
+from app.speech_processing.audio import speech_processing
 from os.path import join as join_path, splitext
-from constants.directory import PROJECT_DIR_TO_DOWNLOAD_FILE, YOUTUBE_DOWNLOAD_FILE_NAME, ALLOWED_EXTENSIONS
+from app.constants.directory import PROJECT_DIR_TO_DOWNLOAD_FILE, YOUTUBE_DOWNLOAD_FILE_NAME, ALLOWED_EXTENSIONS
 import shutil
 from dotenv import load_dotenv
 from pytube import YouTube
