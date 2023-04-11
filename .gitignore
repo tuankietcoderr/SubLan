@@ -1,6 +1,7 @@
 .space
 venv
 app/download/**/*.*
+!app/download/.temp
 *.mp3
 **.srt
 
