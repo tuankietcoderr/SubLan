@@ -5,4 +5,5 @@ WORKDIR /code
 COPY ./requirements.txt /code/requirements.txt
 RUN pip install --no-cache-dir --upgrade -r /code/requirements.txt
 COPY ./app /code/app
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "3000"]
+RUN python3.9 app/load_model.py
+CMD ["python3.9", "app/main.py"]
