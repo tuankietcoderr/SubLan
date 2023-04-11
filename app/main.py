@@ -141,7 +141,7 @@ async def download_subtitle_by_file(model_type: ModelType = Query(ModelType.tiny
     })
 
 
-if __name__ == "__main__":
-    PORT = 3000 if not os.getenv("PORT") else int(os.getenv("PORT"))
-    print(f"Server is running on port: {PORT}")
-    uvicorn.run(app, host="0.0.0.0", port=PORT)
+# if __name__ == "__main__":
+#     PORT = 3000 if not os.getenv("PORT") else int(os.getenv("PORT"))
+#     print(f"Server is running on port: {PORT}")
+#     uvicorn.run(app, host="0.0.0.0", port=PORT)
