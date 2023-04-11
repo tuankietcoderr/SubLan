@@ -1,28 +1,19 @@
-import json
 import os
-
 import uvicorn
-from fastapi import FastAPI, UploadFile, File, Request, Form
-from fastapi.responses import StreamingResponse, JSONResponse
+from fastapi import FastAPI, UploadFile, File, Query
+from fastapi.responses import JSONResponse, FileResponse
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
-from fastapi.responses import FileResponse
-from typing import Optional
-import whisper
-from speech_processing.audio import make_srt_subtitles
-from pathlib import Path
-from os.path import dirname, abspath, join as join_path, splitext
+from speech_processing.audio import speech_processing
+from os.path import join as join_path, splitext
+from constants.directory import PROJECT_DIR_TO_DOWNLOAD_FILE, YOUTUBE_DOWNLOAD_FILE_NAME, ALLOWED_EXTENSIONS
 import shutil
 from dotenv import load_dotenv
-import time
+from pytube import YouTube
+import moviepy.editor as mp
+from enum import Enum
 
 load_dotenv()
-
-DOWNLOAD_DIR = 'download'
-ABS_DIR = dirname(abspath(__file__))
-PROJECT_DIR_TO_DOWNLOAD_FILE = join_path(ABS_DIR, DOWNLOAD_DIR)
-print(PROJECT_DIR_TO_DOWNLOAD_FILE)
-ALLOWED_EXTENSIONS = {'mp3', 'flac', 'wav'}
 
 app = FastAPI()
 app.mount("/files", StaticFiles(directory=PROJECT_DIR_TO_DOWNLOAD_FILE), name="files")
@@ -55,11 +46,26 @@ async def get_file():
     return FileResponse(file_path)
 
 
-@app.post('/download-subtitle')
-async def download_subtitle(request: Request, file: UploadFile = File(), model_type: str = "tiny",
-                            timestamps: Optional[str] = Form("False"), file_name: str = "subtitles",
-                            file_type: str = "srt"):
-    start_time = time.time()
+class FileType(str, Enum):
+    srt = "srt"
+    txt = "txt"
+
+
+class ModelType(str, Enum):
+    tiny = "tiny"
+    base = "base"
+    small = "small"
+    medium = "medium"
+    # Higher CPU
+    # large = "large"
+    # large_v2 = "large-v2"
+
+
+@app.post('/download-subtitle-by-file')
+async def download_subtitle_by_file(file: UploadFile = File(),
+                                    model_type: ModelType = Query(ModelType.tiny, title="Model type"),
+                                    timestamps: bool = True, file_name: str = "subtitles",
+                                    file_type: FileType = Query(FileType.srt, title="File type")):
     # file extension processing
     if not allowed_file(file.filename):
         return {"error": "Invalid file extension"}
@@ -71,40 +77,67 @@ async def download_subtitle(request: Request, file: UploadFile = File(), model_t
     try:
         with open(join_path(PROJECT_DIR_TO_DOWNLOAD_FILE, audio_file_url), 'wb') as buffer:
             shutil.copyfileobj(file.file, buffer)
-    except:
-        print("error")
-        pass
+            buffer.close()
+    except FileNotFoundError as e:
+        print(e)
+        raise
     ##
+    try:
+        result, transcribe = speech_processing(model_type=model_type, timestamps=timestamps, file_type=file_type,
+                                               file_name=file_name, audio_path=audio_file_url)
+        return JSONResponse({
+            "text": result["text"],
+            "transcribe": transcribe,
+            "language": result["language"]
+        })
+    except OSError as e:
+        print(e)
+        raise
 
+
+@app.post("/youtube-to-mp3")
+async def youtube_to_mp3(youtube_url: str):
+    try:
+        # Download the video using pytube
+        youtube = YouTube(youtube_url)
+        video = youtube.streams.get_lowest_resolution()
+        file_size = video.filesize_mb
+        # Check the video size
+        if file_size > 10:
+            return JSONResponse({
+                "message": "File too large, must be less then 10MB!"
+            })
+        # download it to local
+        video.download()
+
+        # Convert the video to audio using moviepy
+        video_path = video.default_filename
+        clip = mp.VideoFileClip(video_path)
+        clip.audio.write_audiofile(join_path(PROJECT_DIR_TO_DOWNLOAD_FILE, YOUTUBE_DOWNLOAD_FILE_NAME))
+
+        # Delete the video file
+        clip.close()
+        os.remove(video_path)
+        return JSONResponse({
+            "message": "Upload successfully!"
+        })
+    except OSError as e:
+        print(e)
+        raise
+
+
+@app.get("/download-subtitle-by-youtube-url")
+async def download_subtitle_by_file(model_type: ModelType = Query(ModelType.tiny, title="Model type"),
+                                    file_name: str = "subtitles",
+                                    file_type: FileType = Query(FileType.srt, title="File type"),
+                                    timestamps: bool = True):
     # Load the model and transcribe the audio
-    audio_file = whisper.load_audio(join_path(PROJECT_DIR_TO_DOWNLOAD_FILE, audio_file_url))
-    model = whisper.load_model(model_type.lower())
-    result = model.transcribe(audio=audio_file, fp16=False)
-    ##
-
-    # Create the subtitle file
-    subtitle_file = join_path(PROJECT_DIR_TO_DOWNLOAD_FILE, f"{file_name}.{file_type}")
-    transcribe = ""
-    if file_type == "srt":
-        with open(subtitle_file, "w", encoding='utf-8') as f:
-            if timestamps:
-                tmp = make_srt_subtitles(result["segments"])
-                transcribe = tmp
-                f.write(tmp)
-            else:
-                transcribe = result["text"]
-                f.write(result["text"])
-    elif file_type == "txt":
-        with open(subtitle_file, "w", encoding='utf-8') as f:
-            transcribe = result["text"]
-            f.write(result["text"])
-
-    else:
-        raise TypeError("Invalid file type")
-    print("It takes %s seconds" % (time.time() - start_time))
+    result, transcribe = speech_processing(model_type=model_type, file_type=file_type, timestamps=timestamps,
+                                           file_name=file_name, audio_path=YOUTUBE_DOWNLOAD_FILE_NAME)
     return JSONResponse({
         "text": result["text"],
-        "transcribe": transcribe
+        "transcribe": transcribe,
+        "language": result["language"]
     })
 
 
