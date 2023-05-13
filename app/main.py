@@ -57,8 +57,8 @@ class ModelType(str, Enum):
     small = "small"
     medium = "medium"
     # Higher CPU
-    # large = "large"
-    # large_v2 = "large-v2"
+    large = "large"
+    large_v2 = "large-v2"
 
 
 @app.post('/download-subtitle-by-file')
