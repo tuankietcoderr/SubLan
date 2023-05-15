@@ -13,8 +13,19 @@ YOUTUBE_DOWNLOAD_FILE_NAME = "youtube_download.mp3"
 def transcribe_time_stamps(segments: list):
     string = ""
     for seg in segments:
-        string += " ".join([str(seg["start"]), "->", str(seg["end"]), ": ", seg["text"].strip(), "\n"])
+        string += "".join([str(seg["start"]), "->", str(seg["end"]), ": ", seg["text"].strip(), "\n"])
     return string
+
+
+def transcribe_time_stamps_arr(segment: list):
+    arr = []
+    for seg in segment:
+        arr.append({
+            "start_at": float(seg["start"]),
+            "end_at": float(seg["end"]),
+            "text": seg["text"].strip()
+        })
+    return arr
 
 
 def make_srt_subtitles(segments: list):
@@ -44,6 +55,7 @@ def speech_processing(audio_path: str, model_type: str, file_type: str, file_nam
     # Create the subtitle file
     subtitle_file = join_path(PROJECT_DIR_TO_DOWNLOAD_FILE, f"{file_name}.{file_type}")
     transcribe = ""
+    transcribe_arr = transcribe_time_stamps_arr(result["segments"])
     if file_type == "srt":
         with open(subtitle_file, "w", encoding='utf-8') as f:
             if timestamps:
@@ -63,5 +75,4 @@ def speech_processing(audio_path: str, model_type: str, file_type: str, file_nam
 
     else:
         raise TypeError("Invalid file type")
-
-    return result, transcribe
+    return result, transcribe, transcribe_arr

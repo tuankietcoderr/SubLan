@@ -83,12 +83,13 @@ async def download_subtitle_by_file(file: UploadFile = File(),
         raise
     ##
     try:
-        result, transcribe = speech_processing(model_type=model_type, timestamps=timestamps, file_type=file_type,
+        result, transcribe, transcribe_arr = speech_processing(model_type=model_type, timestamps=timestamps, file_type=file_type,
                                                file_name=file_name, audio_path=audio_file_url)
         return JSONResponse({
             "text": result["text"],
             "transcribe": transcribe,
-            "language": result["language"]
+            "language": result["language"],
+            "transcribe_arr": transcribe_arr
         })
     except OSError as e:
         print(e)
@@ -102,9 +103,10 @@ async def youtube_to_mp3(youtube_url: str):
         youtube = YouTube(youtube_url)
         video = youtube.streams.get_lowest_resolution()
         file_size = video.filesize_mb
+        print(file_size)
         # Check the video size
-        if file_size > 10:
-            return JSONResponse({
+        if file_size > 20:
+            raise JSONResponse({
                 "message": "File too large, must be less then 10MB!"
             })
         # download it to local
@@ -119,7 +121,8 @@ async def youtube_to_mp3(youtube_url: str):
         clip.close()
         os.remove(video_path)
         return JSONResponse({
-            "message": "Upload successfully!"
+            "message": "Upload successfully!",
+            "file_url": "/files/" + YOUTUBE_DOWNLOAD_FILE_NAME
         })
     except OSError as e:
         print(e)
@@ -132,12 +135,13 @@ async def download_subtitle_by_file(model_type: ModelType = Query(ModelType.tiny
                                     file_type: FileType = Query(FileType.srt, title="File type"),
                                     timestamps: bool = True):
     # Load the model and transcribe the audio
-    result, transcribe = speech_processing(model_type=model_type, file_type=file_type, timestamps=timestamps,
+    result, transcribe, transcribe_arr = speech_processing(model_type=model_type, file_type=file_type, timestamps=timestamps,
                                            file_name=file_name, audio_path=YOUTUBE_DOWNLOAD_FILE_NAME)
     return JSONResponse({
         "text": result["text"],
         "transcribe": transcribe,
-        "language": result["language"]
+        "language": result["language"],
+        "transcribe_arr": transcribe_arr
     })
 
 
