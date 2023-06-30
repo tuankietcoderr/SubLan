@@ -2,6 +2,8 @@ from datetime import timedelta
 import srt
 import whisper
 from os.path import dirname, abspath, join as join_path
+import warnings
+warnings.filterwarnings("ignore")
 
 DOWNLOAD_DIR = 'download'
 ABS_DIR = dirname(abspath(__file__))

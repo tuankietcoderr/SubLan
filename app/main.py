@@ -12,6 +12,8 @@ from dotenv import load_dotenv
 from pytube import YouTube
 import moviepy.editor as mp
 from enum import Enum
+import warnings
+warnings.filterwarnings("ignore")
 
 load_dotenv()
 
