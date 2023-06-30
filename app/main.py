@@ -14,10 +14,6 @@ import moviepy.editor as mp
 from enum import Enum
 import warnings
 warnings.filterwarnings("ignore")
-from numba import config, jit
-
-config.warnings = "ignore"
-# numba jit 
 
 load_dotenv()
 
@@ -66,7 +62,6 @@ class ModelType(str, Enum):
     large = "large"
     large_v2 = "large-v2"
 
-@jit(nopython=True)
 @app.post('/download-subtitle-by-file')
 async def download_subtitle_by_file(file: UploadFile = File(),
                                     model_type: ModelType = Query(ModelType.tiny, title="Model type"),
@@ -102,7 +97,6 @@ async def download_subtitle_by_file(file: UploadFile = File(),
         raise
 
 
-@jit(nopython=True)
 @app.post("/youtube-to-mp3")
 async def youtube_to_mp3(youtube_url: str):
     try:
@@ -136,7 +130,6 @@ async def youtube_to_mp3(youtube_url: str):
         raise
 
 
-@jit(nopython=True)
 @app.get("/download-subtitle-by-youtube-url")
 async def download_subtitle_by_file(model_type: ModelType = Query(ModelType.tiny, title="Model type"),
                                     file_name: str = "subtitles",
