@@ -4,9 +4,9 @@ from fastapi import FastAPI, UploadFile, File, Query
 from fastapi.responses import JSONResponse, FileResponse
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
-from app.speech_processing.audio import speech_processing
+from speech_processing.audio import speech_processing
 from os.path import join as join_path, splitext
-from app.constants.directory import PROJECT_DIR_TO_DOWNLOAD_FILE, YOUTUBE_DOWNLOAD_FILE_NAME, ALLOWED_EXTENSIONS
+from constants.directory import PROJECT_DIR_TO_DOWNLOAD_FILE, YOUTUBE_DOWNLOAD_FILE_NAME, ALLOWED_EXTENSIONS
 import shutil
 from dotenv import load_dotenv
 from pytube import YouTube
@@ -147,7 +147,7 @@ async def download_subtitle_by_file(model_type: ModelType = Query(ModelType.tiny
     })
 
 
-# if __name__ == "__main__":
-#     PORT = 3000 if not os.getenv("PORT") else int(os.getenv("PORT"))
-#     print(f"Server is running on port: {PORT}")
-#     uvicorn.run(app, host="0.0.0.0", port=PORT)
+if __name__ == "__main__":
+    PORT = 8000 if not os.getenv("PORT") else int(os.getenv("PORT"))
+    print(f"Server is running on port: {PORT}")
+    uvicorn.run(app, host="0.0.0.0", port=PORT)
