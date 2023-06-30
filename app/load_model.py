@@ -1,4 +1,6 @@
 from whisper import load_model
+import warnings
+warnings.filterwarnings("ignore")
 
 # Tiny Model Loading...
 load_model("tiny")
@@ -9,6 +11,6 @@ load_model("small")
 # Medium Model Loading...
 load_model("medium")
 # Large Model Loading...
-load_model("large")
+# load_model("large")
 # Large-v2 Model Loading...
 # load_model("large-v2")
